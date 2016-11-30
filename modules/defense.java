@@ -65,27 +65,16 @@ public class helloworld {
 
      Motor.A.setSpeed(1020);
      Motor.B.setSpeed(1020);
-
-     /*
      
-     Motor.A.forward();
-     Motor.B.forward();
-     
-     Thread.sleep (1000);
-     
-     Motor.A.stop();
-     Motor.B.stop();
-  */   
+     int cnt = 0;
      LCD.clear();
      
      timer.reset();
     
      Stopwatch timer_out = new Stopwatch();
-    int is_white = 0;
       
      while(true)
      {
-
       Motor.A.forward();
       Motor.B.forward();
       
@@ -93,58 +82,47 @@ public class helloworld {
       distanceMode.fetchSample(sonarsample, 0);
       is_light.fetchSample(lightsample, 0);
       
-      if( sonarsample[0] < 0.25 )
+      if( sonarsample[0] < 0.30 )
       {
-        //Sound.twoBeeps();
-    //    Motor.A.setSpeed(720);
-    //    Motor.B.setSpeed(720);
-        
-      //  Motor.B.rotate(250);
+        if(sonarsample[0] < 0.15)
+        {
+          Motor.A.backward();
+          Motor.B.backward();
+          Thread.sleep(150);
+        }
         Motor.A.rotate(-60);
       }
 
       
       if( lightsample[0] > 0.32)// No Black Area
       {
-        
-      //  timer_out.reset();
-      //  System.out.println(lightsample[0]);
-        //Sound.beep();
-      //  Motor.A.rotate(90);
-        
-      //  Motor.B.rotate(360);
         Motor.A.rotate(-60);
         
         is_light.fetchSample(lightsample, 0);
         
-        if( timer_out.elapsed() > 5000 && lightsample[0] > 0.32)
+        if( timer_out.elapsed() > 3000 && lightsample[0] > 0.32)
         {
           Sound.twoBeeps();
           
-          float def_len = 1500;
           Motor.A.setSpeed(1020);
           Motor.B.setSpeed(1020);
-          
+          cnt = 500;
           while(true){
             
             Motor.A.rotate(10);
             
             Motor.A.forward();
             Motor.B.forward();
-            Thread.sleep((long) def_len);
+            Thread.sleep((long) cnt);
             is_light.fetchSample(lightsample, 0);
-            
+            if(timer.elapsed() == 15000)break;
             if( lightsample[0] <= 0.32 )
             {
               timer_out.reset();
               break;
             }
-            
-            //def_len += 100;
-
+            cnt = cnt + 100;
           }
-          
-          
         }
         
         Motor.A.setSpeed(1020);
@@ -155,21 +133,13 @@ public class helloworld {
         timer_out.reset();
       }
       
-      
       if ( touchsample[0] == 1)
       {
-      //  Motor.A.forward();
-      //  Motor.B.forward();
-      //  Thread.sleep (1000);
-        LCD.clear();
-        Motor.A.stop();
-        Motor.B.stop();
-        break;
+        Motor.A.rotate(60);
       }
-      //System.out.println(timer.elapsed());
+      System.out.println(timer.elapsed());
       
-      if(timer.elapsed() == 15000)
-        break;
+      if(timer.elapsed() >= 150000)break;
       
      }
      Delay.msDelay(3000);
