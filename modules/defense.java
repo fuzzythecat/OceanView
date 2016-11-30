@@ -79,7 +79,10 @@ public class helloworld {
      LCD.clear();
      
      timer.reset();
-
+    
+     Stopwatch timer_out = new Stopwatch();
+    int is_white = 0;
+      
      while(true)
      {
 
@@ -99,17 +102,85 @@ public class helloworld {
       //  Motor.B.rotate(250);
         Motor.A.rotate(-60);
       }
+
       
-      if( lightsample[0] > 0.32)
+      if( lightsample[0] > 0.32)// No Black Area
       {
+        
+        if( is_white == 0)
+          timer_out.reset();
+        
+        is_white = 1;
+        
+      //  timer_out.reset();
       //  System.out.println(lightsample[0]);
         //Sound.beep();
       //  Motor.A.rotate(90);
         
       //  Motor.B.rotate(360);
         Motor.A.rotate(-60);
+        
+        if( timer.elapsed() > 5000)
+        {
+          Sound.twoBeeps();
+          
+          float def_len = 500;
+          int count = 0;
+          Motor.A.setSpeed(1720);
+          Motor.B.setSpeed(1720);
+          
+          while(true){
+            
+            is_light.fetchSample(lightsample, 0);
+            
+            if( lightsample[0] <= 0.32 )
+            {
+              timer.reset();
+              break;
+            }
+            
+            Motor.A.rotate(15);
+            
+            is_light.fetchSample(lightsample, 0);
+            
+            if( lightsample[0] <= 0.32 )
+            {
+              timer.reset();
+              break;
+            }
+            
+            Motor.A.forward();
+            Motor.B.forward();
+            
+            Thread.sleep((long) def_len);
+            
+            is_light.fetchSample(lightsample, 0);
+            
+            //Motor.B.forward();
+            
+            if( lightsample[0] <= 0.32 )
+            {
+              timer.reset();
+              break;
+            }
 
+            def_len += 100;
+
+          }
+          
+          
+        }
+        
+        Motor.A.setSpeed(720);
+        Motor.B.setSpeed(720);  
       }
+      else
+      {
+        timer_out.reset();
+        
+        is_white = 0;
+      }
+      
       
       if ( touchsample[0] == 1)
       {
