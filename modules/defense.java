@@ -16,7 +16,7 @@ import lejos.utility.Delay;
 import lejos.utility.Stopwatch;
 import lejos.hardware.Sound;
 
-public class helloworld {
+public class Defence {
 
   /**
    * Main method
@@ -52,16 +52,16 @@ public class helloworld {
     @SuppressWarnings("unused")
     RegulatedMotor forntRight = Motor.B;
     
-    String message = args.length > 0 ? args[0] : "Hello world!";
+  //  String message = args.length > 0 ? args[0] : "Hello world!";
 
-    System.out.println(message);
+  //  System.out.println(message);
 
-    Delay.msDelay(500);
-    Sound.beep();
+  //  Delay.msDelay(500);
+  //  Sound.beep();
 
-    System.out.println();
-    System.out.println("Battery voltage:");
-    System.out.println(Battery.getVoltage());
+  //  System.out.println();
+  //  System.out.println("Battery voltage:");
+  //  System.out.println(Battery.getVoltage());
 
      Motor.A.setSpeed(1020);
      Motor.B.setSpeed(1020);
@@ -102,20 +102,18 @@ public class helloworld {
         
         if( timer_out.elapsed() > 3000 && lightsample[0] > 0.32)
         {
-          Sound.twoBeeps();
-          
+          //Sound.twoBeeps();
           Motor.A.setSpeed(1020);
           Motor.B.setSpeed(1020);
           cnt = 500;
           while(true){
             
             Motor.A.rotate(10);
-            
             Motor.A.forward();
             Motor.B.forward();
             Thread.sleep((long) cnt);
             is_light.fetchSample(lightsample, 0);
-            if(timer.elapsed() == 15000)break;
+            if(timer.elapsed() == 180000)break;
             if( lightsample[0] <= 0.32 )
             {
               timer_out.reset();
@@ -137,9 +135,9 @@ public class helloworld {
       {
         Motor.A.rotate(60);
       }
-      System.out.println(timer.elapsed());
+      //System.out.println(timer.elapsed());
       
-      if(timer.elapsed() >= 150000)break;
+      if(timer.elapsed() >= 180000)break;
       
      }
      Delay.msDelay(3000);
